@@ -1,0 +1,895 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bloomery AI - Premium Florist & AI Assistant</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ================= VARIABLES & RESET ================= */
+      :root {
+        --soft-pink: #ffecf2;
+        --rose-gold: #b76e79;
+        --rose-gold-dark: #9a5a64;
+        --cream: #fffdd0;
+        --white: #ffffff;
+        --text-dark: #2d3748;
+        --text-light: #718096;
+        --bg-gray: #f7fafc;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: var(--white);
+        color: var(--text-dark);
+        overflow-x: hidden;
+      }
+
+      /* ================= NAVBAR (GLASSMORPHISM) ================= */
+      nav {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 8%;
+        transition: all 0.4s ease;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      nav.scrolled {
+        padding: 15px 8%;
+        background: rgba(255, 255, 255, 0.98);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      }
+      .logo {
+        font-size: 26px;
+        font-weight: 700;
+        color: var(--rose-gold);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .nav-links {
+        display: flex;
+        gap: 40px;
+        list-style: none;
+      }
+      .nav-links a {
+        text-decoration: none;
+        color: var(--text-dark);
+        font-weight: 500;
+        font-size: 15px;
+        transition: 0.3s;
+      }
+      .nav-links a:hover {
+        color: var(--rose-gold);
+      }
+      .btn-nav {
+        background-color: var(--rose-gold);
+        color: var(--white) !important;
+        padding: 10px 24px;
+        border-radius: 50px;
+      }
+      .btn-nav:hover {
+        background-color: var(--rose-gold-dark);
+        transform: translateY(-2px);
+      }
+
+      /* ================= HERO SECTION ================= */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 8%;
+        background: linear-gradient(
+          135deg,
+          var(--soft-pink) 0%,
+          var(--white) 100%
+        );
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-content {
+        flex: 1;
+        max-width: 600px;
+        z-index: 2;
+        padding-top: 80px;
+      }
+      .badge {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: rgba(183, 110, 121, 0.1);
+        color: var(--rose-gold);
+        border-radius: 50px;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 20px;
+      }
+      .hero h1 {
+        font-size: 54px;
+        line-height: 1.2;
+        margin-bottom: 20px;
+        color: #1a202c;
+      }
+      .hero h1 span {
+        color: var(--rose-gold);
+      }
+      .hero p {
+        font-size: 18px;
+        color: var(--text-light);
+        margin-bottom: 40px;
+        line-height: 1.6;
+      }
+      .hero-buttons {
+        display: flex;
+        gap: 20px;
+      }
+      .btn-primary,
+      .btn-secondary {
+        padding: 16px 32px;
+        border-radius: 50px;
+        font-size: 16px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: 0.3s;
+        cursor: pointer;
+        border: none;
+      }
+      .btn-primary {
+        background-color: var(--rose-gold);
+        color: var(--white);
+        box-shadow: 0 8px 20px rgba(183, 110, 121, 0.3);
+      }
+      .btn-primary:hover {
+        background-color: var(--rose-gold-dark);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 25px rgba(183, 110, 121, 0.4);
+      }
+      .btn-secondary {
+        background-color: transparent;
+        color: var(--rose-gold);
+        border: 2px solid var(--rose-gold);
+      }
+      .btn-secondary:hover {
+        background-color: rgba(183, 110, 121, 0.05);
+      }
+      .hero-image {
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+        z-index: 2;
+        position: relative;
+      }
+      .hero-image img {
+        width: 90%;
+        max-width: 550px;
+        border-radius: 20px 20px 100px 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      }
+
+      /* ================= FEATURES SECTION ================= */
+      .features {
+        padding: 100px 8%;
+        background-color: var(--white);
+        text-align: center;
+      }
+      .section-title {
+        font-size: 36px;
+        color: #1a202c;
+        margin-bottom: 15px;
+      }
+      .section-subtitle {
+        color: var(--text-light);
+        margin-bottom: 60px;
+        font-size: 16px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 40px;
+      }
+      .feature-card {
+        padding: 40px 30px;
+        border-radius: 20px;
+        background: var(--bg-gray);
+        transition: 0.3s;
+        border: 1px solid transparent;
+      }
+      .feature-card:hover {
+        transform: translateY(-10px);
+        background: var(--white);
+        border-color: var(--soft-pink);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+      }
+      .feature-icon {
+        font-size: 40px;
+        margin-bottom: 20px;
+        display: inline-block;
+        background: var(--soft-pink);
+        width: 80px;
+        height: 80px;
+        line-height: 80px;
+        border-radius: 50%;
+        color: var(--rose-gold);
+      }
+      .feature-card h3 {
+        font-size: 22px;
+        margin-bottom: 15px;
+      }
+      .feature-card p {
+        color: var(--text-light);
+        line-height: 1.6;
+      }
+
+      /* ================= CATALOG & SEARCH SECTION ================= */
+      .catalog {
+        padding: 100px 8%;
+        background-color: var(--bg-gray);
+      }
+
+      /* Search Bar Style */
+      .search-container {
+        text-align: center;
+        margin-bottom: 50px;
+      }
+      #searchInput {
+        width: 100%;
+        max-width: 600px;
+        padding: 18px 30px;
+        border-radius: 50px;
+        border: 2px solid #edf2f7;
+        font-size: 16px;
+        font-family: "Poppins", sans-serif;
+        outline: none;
+        transition: 0.3s;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+        background: var(--white)
+          url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%23718096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>')
+          no-repeat 95% center;
+      }
+      #searchInput:focus {
+        border-color: var(--rose-gold);
+        box-shadow: 0 8px 25px rgba(183, 110, 121, 0.15);
+      }
+      .no-result {
+        display: none;
+        text-align: center;
+        padding: 40px;
+        font-size: 18px;
+        color: var(--text-light);
+        background: var(--white);
+        border-radius: 20px;
+        border: 1px dashed var(--rose-gold);
+        grid-column: 1 / -1;
+      }
+
+      .catalog-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+      }
+      .product-card {
+        background: var(--white);
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+        transition: 0.3s;
+        position: relative;
+        border: 1px solid #edf2f7;
+      }
+      .product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(183, 110, 121, 0.15);
+        border-color: var(--soft-pink);
+      }
+      .product-badge {
+        position: absolute;
+        top: 35px;
+        right: 35px;
+        background: var(--white);
+        color: var(--rose-gold);
+        padding: 5px 12px;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 600;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+      .product-img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        background-color: #eee;
+      }
+      .product-info h4 {
+        font-size: 20px;
+        margin-bottom: 8px;
+        color: #1a202c;
+      }
+      .product-info .cat {
+        color: var(--text-light);
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 12px;
+        display: block;
+      }
+      .product-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #edf2f7;
+      }
+      .price {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--rose-gold);
+      }
+      .rating {
+        color: #ecc94b;
+        font-weight: 600;
+      }
+
+      /* ================= FOOTER ================= */
+      footer {
+        background-color: #1a202c;
+        color: #a0aec0;
+        padding: 60px 8% 30px;
+        text-align: center;
+      }
+      .footer-content {
+        margin-bottom: 40px;
+      }
+      footer h2 {
+        color: var(--white);
+        margin-bottom: 15px;
+      }
+      footer p {
+        max-width: 400px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+      .copyright {
+        border-top: 1px solid #2d3748;
+        padding-top: 30px;
+        font-size: 14px;
+      }
+
+      /* ================= FLOATING CHAT WIDGET ================= */
+      .chat-container {
+        position: fixed;
+        bottom: 40px;
+        right: 40px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+      }
+      .chat-tooltip {
+        background: var(--white);
+        color: var(--text-dark);
+        padding: 10px 20px;
+        border-radius: 20px 20px 0 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 15px;
+        font-size: 14px;
+        font-weight: 500;
+        animation: bounce 2s infinite;
+        border: 1px solid #edf2f7;
+        opacity: 1;
+        transition: opacity 0.3s;
+      }
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-5px);
+        }
+      }
+      .chat-btn {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background-color: var(--rose-gold);
+        color: white;
+        border: none;
+        font-size: 30px;
+        box-shadow: 0 8px 25px rgba(183, 110, 121, 0.5);
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+      }
+      .chat-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: var(--rose-gold);
+        z-index: -1;
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          opacity: 0.6;
+        }
+        100% {
+          transform: scale(1.4);
+          opacity: 0;
+        }
+      }
+      .chat-btn:hover {
+        transform: scale(1.1);
+        background-color: var(--rose-gold-dark);
+      }
+      .chat-widget-box {
+        display: none;
+        width: 400px;
+        height: 650px;
+        background-color: var(--white);
+        border-radius: 20px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        margin-bottom: 20px;
+        border: 1px solid rgba(183, 110, 121, 0.2);
+        transform-origin: bottom right;
+        animation: scaleUp 0.3s ease forwards;
+      }
+      @keyframes scaleUp {
+        from {
+          transform: scale(0.5);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      @media (max-width: 991px) {
+        .hero {
+          flex-direction: column;
+          text-align: center;
+          padding-top: 120px;
+        }
+        .hero-content {
+          margin-bottom: 50px;
+        }
+        .chat-widget-box {
+          width: 90vw;
+          height: 70vh;
+          right: 20px;
+          bottom: 100px;
+          position: fixed;
+        }
+        .nav-links {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav id="navbar">
+      <a href="#" class="logo">🌸 Bloomery.</a>
+      <ul class="nav-links">
+        <li><a href="#beranda">Beranda</a></li>
+        <li><a href="#fitur">Keunggulan</a></li>
+        <li><a href="#katalog">Katalog</a></li>
+        <li>
+          <a href="#" onclick="toggleChat()" class="btn-nav"
+            >Tanya AI Assistant</a
+          >
+        </li>
+      </ul>
+    </nav>
+
+    <section class="hero" id="beranda">
+      <div class="hero-content">
+        <div class="badge">✨ Inovasi Florist #1 di Indonesia</div>
+        <h1>
+          Rangkai Momen Spesial Anda dengan <span>Kecerdasan Buatan</span>
+        </h1>
+        <p>
+          Tidak perlu bingung memilih bunga. Konsultasikan acara, anggaran, dan
+          warna favorit Anda. Personal AI Florist kami akan memberikan
+          rekomendasi buket paling sempurna dalam hitungan detik.
+        </p>
+        <div class="hero-buttons">
+          <button class="btn-primary" onclick="toggleChat()">
+            Mulai Konsultasi Gratis
+          </button>
+          <a href="#katalog" class="btn-secondary">Eksplorasi Katalog</a>
+        </div>
+      </div>
+      <div class="hero-image">
+        <img
+          src="https://images.unsplash.com/photo-1563241527-3004b7be0ffd?q=80&w=800&auto=format&fit=crop"
+          alt="Premium Bouquet"
+        />
+      </div>
+    </section>
+
+    <section class="features" id="fitur">
+      <h2 class="section-title">Mengapa Memilih Bloomery?</h2>
+      <p class="section-subtitle">
+        Kami menggabungkan seni merangkai bunga tradisional dengan teknologi AI
+        modern untuk memberikan pengalaman belanja yang mulus.
+      </p>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🤖</div>
+          <h3>Personal AI Assistant</h3>
+          <p>
+            Chatbot kami siap 24/7 membantu Anda menemukan kombinasi bunga
+            terbaik sesuai dengan budget dan jenis acara Anda.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">✨</div>
+          <h3>Kualitas Premium</h3>
+          <p>
+            Bunga segar dipanen langsung dari kebun pilihan dan dirangkai oleh
+            artisan florist berpengalaman kami.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🚚</div>
+          <h3>Pengiriman Aman</h3>
+          <p>
+            Armada logistik khusus kami memastikan buket Anda tiba di lokasi
+            dalam kondisi paling segar dan sempurna.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="catalog" id="katalog">
+      <div style="text-align: center; margin-bottom: 40px">
+        <h2 class="section-title">Koleksi Terpopuler</h2>
+        <p class="section-subtitle">
+          Beberapa mahakarya rangkaian bunga yang paling dicintai oleh pelanggan
+          kami bulan ini.
+        </p>
+      </div>
+
+      <div class="search-container">
+        <input
+          type="text"
+          id="searchInput"
+          onkeyup="searchCatalog()"
+          placeholder="Ketik nama bunga atau acara (cth: wisuda, mawar)..."
+        />
+      </div>
+
+      <div class="catalog-grid" id="catalogGrid">
+        <div class="no-result" id="noResultMsg">
+          Maaf, buket yang Anda cari belum tersedia 🥺. <br />
+          <span style="font-size: 14px; margin-top: 10px; display: block"
+            >Klik tombol chat di kanan bawah untuk tanya AI!</span
+          >
+        </div>
+
+        <div class="product-card">
+          <div class="product-badge">Terlaris</div>
+          <img
+            src="https://images.unsplash.com/photo-1546842931-886c185b4c8c?w=500&q=80"
+            alt="Rose"
+            class="product-img"
+          />
+          <div class="product-info">
+            <span class="cat">Anniversary</span>
+            <h4>Red Elegance Rose</h4>
+          </div>
+          <div class="product-footer">
+            <div class="price">Rp 350.000</div>
+            <div class="rating">⭐ 4.9</div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <img src="assets/white-lily.jpg" alt="Lily" class="product-img" />
+          <div class="product-info">
+            <span class="cat">Pernikahan</span>
+            <h4>White Lily Wedding</h4>
+          </div>
+          <div class="product-footer">
+            <div class="price">Rp 500.000</div>
+            <div class="rating">⭐ 5.0</div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <img
+            src="https://images.unsplash.com/photo-1554631221-f9603e6808be?w=500&q=80"
+            alt="Sunflower"
+            class="product-img"
+          />
+          <div class="product-info">
+            <span class="cat">Ulang Tahun</span>
+            <h4>Yellow Cheer Up</h4>
+          </div>
+          <div class="product-footer">
+            <div class="price">Rp 120.000</div>
+            <div class="rating">⭐ 4.7</div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <img
+            src="https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=500&q=80"
+            alt="Pink Rose"
+            class="product-img"
+          />
+          <div class="product-info">
+            <span class="cat">Wisuda</span>
+            <h4>Graduation Pink Rose</h4>
+          </div>
+          <div class="product-footer">
+            <div class="price">Rp 150.000</div>
+            <div class="rating">⭐ 4.8</div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-badge">Promo</div>
+          <img src="assets/pink.jpg" alt="Tulip" class="product-img" />
+          <div class="product-info">
+            <span class="cat">Valentine</span>
+            <h4>Sweet Valentine Tulip</h4>
+          </div>
+          <div class="product-footer">
+            <div class="price">Rp 250.000</div>
+            <div class="rating">⭐ 4.9</div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <img src="assets/blue.jpg" alt="Hydrangea" class="product-img" />
+          <div class="product-info">
+            <span class="cat">Ulang Tahun</span>
+            <h4>Blue Hydrangea Dream</h4>
+          </div>
+          <div class="product-footer">
+            <div class="price">Rp 200.000</div>
+            <div class="rating">⭐ 4.6</div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <img
+            src="https://images.unsplash.com/photo-1463936575829-25148e1db1b8?w=500&q=80"
+            alt="Rustic"
+            class="product-img"
+          />
+          <div class="product-info">
+            <span class="cat">Pernikahan</span>
+            <h4>Rustic Wedding Mix</h4>
+          </div>
+          <div class="product-footer">
+            <div class="price">Rp 450.000</div>
+            <div class="rating">⭐ 4.8</div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <img
+            src="https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?w=500&q=80"
+            alt="Peony"
+            class="product-img"
+          />
+          <div class="product-info">
+            <span class="cat">Ulang Tahun</span>
+            <h4>Birthday Pastel Peony</h4>
+          </div>
+          <div class="product-footer">
+            <div class="price">Rp 280.000</div>
+            <div class="rating">⭐ 4.7</div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <img
+            src="https://images.unsplash.com/photo-1508784411316-02b8cd4d3a3a?w=500&q=80"
+            alt="Baby Breath"
+            class="product-img"
+          />
+          <div class="product-info">
+            <span class="cat">Wisuda</span>
+            <h4>White Baby Breath</h4>
+          </div>
+          <div class="product-footer">
+            <div class="price">Rp 90.000</div>
+            <div class="rating">⭐ 4.5</div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-badge">Premium</div>
+          <img
+            src="https://images.unsplash.com/photo-1562690868-60bbe7293e94?w=500&q=80"
+            alt="100 Roses"
+            class="product-img"
+          />
+          <div class="product-info">
+            <span class="cat">Anniversary</span>
+            <h4>100 Red Romance</h4>
+          </div>
+          <div class="product-footer">
+            <div class="price">Rp 850.000</div>
+            <div class="rating">⭐ 5.0</div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <img
+            src="https://images.unsplash.com/photo-1519378058457-4c29a0a2efac?w=500&q=80"
+            alt="Bridal Peony"
+            class="product-img"
+          />
+          <div class="product-info">
+            <span class="cat">Pernikahan</span>
+            <h4>Bridal Pastel Peony</h4>
+          </div>
+          <div class="product-footer">
+            <div class="price">Rp 600.000</div>
+            <div class="rating">⭐ 4.9</div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <img src="assets/sun.jpg" alt="Sunflower Doll" class="product-img" />
+          <div class="product-info">
+            <span class="cat">Wisuda</span>
+            <h4>Sunflower Plus Doll</h4>
+          </div>
+          <div class="product-footer">
+            <div class="price">Rp 180.000</div>
+            <div class="rating">⭐ 4.7</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 50px">
+        <button class="btn-secondary" onclick="toggleChat()">
+          Cari Lebih Banyak via AI ➔
+        </button>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-content">
+        <h2>🌸 Bloomery AI</h2>
+        <p>
+          Memberikan kemudahan mengekspresikan perasaan melalui keindahan bunga
+          dan teknologi AI.
+        </p>
+      </div>
+      <div class="copyright">
+        &copy; 2026 Bloomery Florist. Seluruh Hak Cipta Dilindungi.
+      </div>
+    </footer>
+
+    <div class="chat-container">
+      <div class="chat-tooltip" id="chat-tooltip">
+        Bingung pilih bunga? Tanya AI! 👋
+      </div>
+
+      <div class="chat-widget-box" id="chat-widget">
+        <iframe
+          src="http://localhost:8501/?embed=true"
+          frameborder="0"
+          scrolling="no"
+          style="
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+          "
+        ></iframe>
+      </div>
+
+      <button class="chat-btn" id="chat-btn" onclick="toggleChat()">🌸</button>
+    </div>
+
+    <script>
+      // Logika Navbar
+      window.addEventListener("scroll", function () {
+        const navbar = document.getElementById("navbar");
+        if (window.scrollY > 50) {
+          navbar.classList.add("scrolled");
+        } else {
+          navbar.classList.remove("scrolled");
+        }
+      });
+
+      // Logika Fitur Pencarian (Search Bar)
+      function searchCatalog() {
+        // Ambil teks dari input user
+        let input = document.getElementById("searchInput").value.toLowerCase();
+        let cards = document.getElementsByClassName("product-card");
+        let noResult = document.getElementById("noResultMsg");
+        let hasResult = false;
+
+        // Looping ke semua produk
+        for (let i = 0; i < cards.length; i++) {
+          let title = cards[i].querySelector("h4").innerText.toLowerCase();
+          let category = cards[i].querySelector(".cat").innerText.toLowerCase();
+
+          // Cek apakah judul ATAU kategori cocok dengan pencarian
+          if (title.includes(input) || category.includes(input)) {
+            cards[i].style.display = ""; // Tampilkan jika cocok
+            hasResult = true;
+          } else {
+            cards[i].style.display = "none"; // Sembunyikan jika tidak
+          }
+        }
+
+        // Tampilkan peringatan jika tidak ada yang cocok
+        if (!hasResult) {
+          noResult.style.display = "block";
+        } else {
+          noResult.style.display = "none";
+        }
+      }
+
+      // Logika Buka/Tutup Chatbot
+      function toggleChat() {
+        var widget = document.getElementById("chat-widget");
+        var btn = document.getElementById("chat-btn");
+        var tooltip = document.getElementById("chat-tooltip");
+
+        if (widget.style.display === "none" || widget.style.display === "") {
+          widget.style.display = "block";
+          btn.innerHTML = "✖";
+          btn.style.transform = "rotate(90deg)";
+          tooltip.style.opacity = "0";
+          setTimeout(() => (tooltip.style.display = "none"), 300);
+        } else {
+          widget.style.display = "none";
+          btn.innerHTML = "🌸";
+          btn.style.transform = "rotate(0deg)";
+        }
+      }
+
+      setTimeout(function () {
+        var tooltip = document.getElementById("chat-tooltip");
+        if (tooltip) {
+          tooltip.style.opacity = "0";
+          setTimeout(() => (tooltip.style.display = "none"), 300);
+        }
+      }, 10000);
+    </script>
+  </body>
+</html>
