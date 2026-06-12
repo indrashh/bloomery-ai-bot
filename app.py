@@ -41,11 +41,8 @@ def init_db():
     if c.fetchone()[0] != 10:
         c.execute("DELETE FROM products") # Bersihkan data lama agar tidak duplikat
         dummies = [
-            ("Graduation Pink Rose", 150000, "wisuda", "pink", "mawar"),
             ("Red Elegance Anniversary", 350000, "anniversary", "merah", "mawar"),
             ("Yellow Cheer Up", 120000, "ulang tahun", "kuning", "matahari"),
-            ("White Lily Wedding", 500000, "pernikahan", "putih", "lily"),
-            ("Valentine Pink Tulip", 250000, "valentine", "pink", "tulip"),
             ("Graduation Blue Hydrangea", 200000, "wisuda", "biru", "hydrangea"),
             ("Rustic Wedding Mix", 450000, "pernikahan", "coklat", "mix"),
             ("Birthday Pastel Peony", 280000, "ulang tahun", "pastel", "peony"),
