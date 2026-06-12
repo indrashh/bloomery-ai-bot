@@ -97,18 +97,29 @@ else:
     
     # Form Lead diletakkan di dalam Expander paling atas agar tidak tertutup input chat
     with st.expander("📝 Formulir Pemesanan Buket"):
-        with st.form("lead_form", clear_on_submit=True):
+        with st.form("lead_form", clear_on_submit=False):
             nama_lead = st.text_input("Nama Lengkap")
-            wa_lead = st.text_input("Nomor WhatsApp")
+            wa_lead = st.text_input("Nomor WhatsApp Anda")
             produk_lead = st.text_input("Buket yang Diinginkan")
-            if st.form_submit_button("Kirim Permintaan"):
+            
+            if st.form_submit_button("Pesan via WhatsApp 📱"):
                 if nama_lead and wa_lead and produk_lead:
+                    # 1. Tetap simpan ke database untuk arsip/dashboard admin Anda
                     conn.cursor().execute("INSERT INTO leads (nama, whatsapp, produk, tanggal) VALUES (?, ?, ?, ?)",
                                           (nama_lead, wa_lead, produk_lead, datetime.now().strftime("%Y-%m-%d")))
                     conn.commit()
-                    st.success("Terkirim! Florist kami akan chat WA Anda.")
+                    
+                    # 2. Susun template pesan untuk dikirim ke WA Anda
+                    pesan_wa = f"Halo Bloomery! 🌸%0A%0ASaya ingin memesan buket:%0A👤 Nama: {nama_lead}%0A📞 Nomor Kontak: {wa_lead}%0A💐 Pesanan: {produk_lead}%0A%0AMohon info ketersediaan dan total harganya ya. Terima kasih!"
+                    
+                    # 3. Buat link menuju WA Anda (081226397647)
+                    link_wa = f"https://wa.me/6281226397647?text={pesan_wa}"
+                    
+                    # 4. Tampilkan tombol hijau untuk langsung buka WhatsApp
+                    st.success("Formulir berhasil diisi!")
+                    st.markdown(f'<a href="{link_wa}" target="_blank" style="background-color:#25D366; color:white; padding:10px 20px; text-decoration:none; border-radius:8px; display:block; text-align:center; font-weight:bold;">Lanjutkan ke WhatsApp ➔</a>', unsafe_allow_html=True)
                 else:
-                    st.error("Lengkapi form terlebih dahulu.")
+                    st.error("Mohon lengkapi formulir terlebih dahulu.")
                     
     st.markdown("<hr style='margin: 10px 0;'>", unsafe_allow_html=True)
 
