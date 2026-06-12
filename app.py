@@ -35,8 +35,11 @@ def init_db():
     c.execute('''CREATE TABLE IF NOT EXISTS leads (id INTEGER PRIMARY KEY AUTOINCREMENT, nama TEXT, whatsapp TEXT, produk TEXT, tanggal TEXT)''')
     c.execute('''CREATE TABLE IF NOT EXISTS chat_history (id INTEGER PRIMARY KEY AUTOINCREMENT, user_msg TEXT, bot_reply TEXT, tanggal TEXT)''')
     
+    # Reset table products jika ingin memperbarui jumlah item dummy menjadi 10
+    # Cek jumlah data saat ini, jika bukan 10 maka kita sesuaikan
     c.execute("SELECT COUNT(*) FROM products")
-    if c.fetchone()[0] == 0:
+    if c.fetchone()[0] != 10:
+        c.execute("DELETE FROM products") # Bersihkan data lama agar tidak duplikat
         dummies = [
             ("Graduation Pink Rose", 150000, "wisuda", "pink", "mawar"),
             ("Red Elegance Anniversary", 350000, "anniversary", "merah", "mawar"),
@@ -45,7 +48,9 @@ def init_db():
             ("Valentine Pink Tulip", 250000, "valentine", "pink", "tulip"),
             ("Graduation Blue Hydrangea", 200000, "wisuda", "biru", "hydrangea"),
             ("Rustic Wedding Mix", 450000, "pernikahan", "coklat", "mix"),
-            ("Birthday Pastel Peony", 280000, "ulang tahun", "pastel", "peony")
+            ("Birthday Pastel Peony", 280000, "ulang tahun", "pastel", "peony"),
+            ("Purple Orchid Luxury", 650000, "anniversary", "ungu", "anggrek"), # Produk Baru 9
+            ("Romantic Red Tulip", 300000, "valentine", "merah", "tulip")        # Produk Baru 10
         ]
         c.executemany("INSERT INTO products (nama, harga, kategori, warna, bunga) VALUES (?, ?, ?, ?, ?)", dummies)
         conn.commit()
@@ -94,7 +99,7 @@ else:
     # ==========================================
     st.markdown("<h4 style='text-align:center; color:#B76E79; margin-top:-20px;'>🌸 Asisten Bloomery</h4>", unsafe_allow_html=True)
     
-    # Form Lead terintegrasi WhatsApp (Sudah diperbaiki tombolnya)
+    # Form Lead terintegrasi WhatsApp
     with st.expander("📝 Formulir Pemesanan Buket"):
         with st.form("lead_form", clear_on_submit=False):
             nama_lead = st.text_input("Nama Lengkap")
@@ -111,7 +116,7 @@ else:
                     link_wa = f"https://wa.me/6281226397647?text={pesan_wa}"
                     
                     st.success("Formulir terekam! Klik tombol di bawah untuk kirim ke Florist.")
-                    st.link_button("Lanjutkan ke WhatsApp ➔", link_wa) # Menggunakan tombol bawaan Streamlit yang aman
+                    st.link_button("Lanjutkan ke WhatsApp ➔", link_wa)
                 else:
                     st.error("Mohon lengkapi formulir terlebih dahulu.")
                     
@@ -124,12 +129,12 @@ else:
             with st.chat_message(msg["role"]):
                 st.markdown(msg["content"])
                 
-    # NLP & SQL Engine yang Diperbarui
+    # NLP & SQL Engine
     def get_bloomerbro_recommendation(user_input):
         df = pd.read_sql("SELECT * FROM products", conn)
         text = user_input.lower()
         
-        # 1. Menangani sapaan dasar agar lebih natural
+        # 1. Menangani sapaan dasar
         greetings = ['halo', 'hai', 'pagi', 'siang', 'sore', 'malam', 'test', 'ping']
         if any(g in text.split() for g in greetings) and len(text.split()) <= 3:
             return "Halo juga! Bloomerbro siap bantu nih. Ada yang bisa saya rekomendasikan untuk Anda hari ini?"
@@ -146,12 +151,12 @@ else:
         elif 'pernikahan' in text or 'nikah' in text: df = df[df['kategori'] == 'pernikahan']
         elif 'valentine' in text: df = df[df['kategori'] == 'valentine']
         
-        # Pengecekan warna yang lebih fleksibel
-        warna_ditemukan = [w for w in ['pink', 'merah', 'putih', 'kuning', 'biru', 'pastel', 'coklat'] if w in text]
+        # Pengecekan warna yang fleksibel
+        warna_ditemukan = [w for w in ['pink', 'merah', 'putih', 'kuning', 'biru', 'pastel', 'coklat', 'ungu'] if w in text]
         if warna_ditemukan:
             df = df[df['warna'].str.contains('|'.join(warna_ditemukan))]
             
-        bunga_ditemukan = [b for b in ['mawar', 'lily', 'tulip', 'peony', 'matahari', 'mix', 'hydrangea'] if b in text]
+        bunga_ditemukan = [b for b in ['mawar', 'lily', 'tulip', 'peony', 'matahari', 'mix', 'hydrangea', 'anggrek'] if b in text]
         if bunga_ditemukan:
             df = df[df['bunga'].str.contains('|'.join(bunga_ditemukan))]
                 
