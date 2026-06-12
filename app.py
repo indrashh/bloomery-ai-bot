@@ -8,13 +8,13 @@ from datetime import datetime
 # 1. KONFIGURASI TAMPILAN KHUSUS WIDGET
 st.set_page_config(page_title="Bloomery", layout="centered", initial_sidebar_state="collapsed")
 
-# CSS Khusus untuk menghilangkan border, header, dan merapikan padding agar pas di dalam Iframe HTML
+# CSS Khusus
 st.markdown("""
 <style>
     header {visibility: hidden; height: 0px !important;}
     footer {visibility: hidden; height: 0px !important;}
     .block-container { padding: 1rem 1rem 5rem 1rem !important; max-width: 100%; margin: 0; }
-    [data-testid="collapsedControl"] { display: none; } /* Sembunyikan ikon hamburger menu */
+    [data-testid="collapsedControl"] { display: none; }
     
     /* Modifikasi Chat Bubble */
     .stChatMessage { background-color: #FFFDD0; border-radius: 12px; padding: 12px; margin-bottom: 8px; border: 1px solid #FFB6C1; }
@@ -23,7 +23,7 @@ st.markdown("""
     /* Modifikasi Tombol & Expander */
     div.stButton > button { background-color: #B76E79; color: white; border-radius: 8px; width: 100%; border: none;}
     div.stButton > button:hover { background-color: #9A5A64; color: white;}
-    .streamlit-expanderHeader { font-size: 14px !important; color: #B76E79 !important; }
+    .streamlit-expanderHeader { font-size: 14px !important; color: #B76E79 !important; font-weight: bold; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -53,17 +53,16 @@ def init_db():
 
 conn = init_db()
 
-# Menghapus kata AI pada sapaan awal
+# Sapaan Awal Bloomerbro
 if 'chat_history' not in st.session_state:
-    st.session_state.chat_history = [{"role": "assistant", "content": "Halo! Saya Asisten Florist Bloomery. Acara apa yang sedang Anda siapkan? (Cth: Buket wisuda warna pink)"}]
+    st.session_state.chat_history = [{"role": "assistant", "content": "Halo! Panggil saya **Bloomerbro**, asisten florist andalan Anda. Ada acara spesial apa yang sedang dipersiapkan hari ini? (Cth: Butuh buket wisuda warna pink budget 200rb)"}]
 
-# 3. ROUTING VIEW (Memisahkan Tampilan HTML Iframe vs Tampilan Admin)
-# Mengambil parameter dari URL (contoh: ?view=admin)
+# 3. ROUTING VIEW
 view_mode = st.query_params.get("view", "chatbot")
 
 if view_mode == "admin":
     # ==========================================
-    # HALAMAN KHUSUS ADMIN (FULL SCREEN)
+    # HALAMAN KHUSUS ADMIN
     # ==========================================
     st.markdown("<h2 style='color:#B76E79;'>📊 Dashboard Admin Bloomery</h2>", unsafe_allow_html=True)
     df_leads = pd.read_sql("SELECT * FROM leads", conn)
@@ -95,7 +94,7 @@ else:
     # ==========================================
     st.markdown("<h4 style='text-align:center; color:#B76E79; margin-top:-20px;'>🌸 Asisten Bloomery</h4>", unsafe_allow_html=True)
     
-    # Form Lead diletakkan di dalam Expander paling atas agar tidak tertutup input chat
+    # Form Lead terintegrasi WhatsApp (Sudah diperbaiki tombolnya)
     with st.expander("📝 Formulir Pemesanan Buket"):
         with st.form("lead_form", clear_on_submit=False):
             nama_lead = st.text_input("Nama Lengkap")
@@ -104,20 +103,15 @@ else:
             
             if st.form_submit_button("Pesan via WhatsApp 📱"):
                 if nama_lead and wa_lead and produk_lead:
-                    # 1. Tetap simpan ke database untuk arsip/dashboard admin Anda
                     conn.cursor().execute("INSERT INTO leads (nama, whatsapp, produk, tanggal) VALUES (?, ?, ?, ?)",
                                           (nama_lead, wa_lead, produk_lead, datetime.now().strftime("%Y-%m-%d")))
                     conn.commit()
                     
-                    # 2. Susun template pesan untuk dikirim ke WA Anda
-                    pesan_wa = f"Halo Bloomery! 🌸%0A%0ASaya ingin memesan buket:%0A👤 Nama: {nama_lead}%0A📞 Nomor Kontak: {wa_lead}%0A💐 Pesanan: {produk_lead}%0A%0AMohon info ketersediaan dan total harganya ya. Terima kasih!"
-                    
-                    # 3. Buat link menuju WA Anda (081226397647)
+                    pesan_wa = f"Halo Bloomery! 🌸%0A%0ASaya ingin memesan buket:%0A👤 Nama: {nama_lead}%0A📞 Nomor Kontak: {wa_lead}%0A💐 Pesanan: {produk_lead}%0A%0AMohon info ketersediaan dan total harganya ya."
                     link_wa = f"https://wa.me/6281226397647?text={pesan_wa}"
                     
-                    # 4. Tampilkan tombol hijau untuk langsung buka WhatsApp
-                    st.success("Formulir berhasil diisi!")
-                    st.markdown(f'<a href="{link_wa}" target="_blank" style="background-color:#25D366; color:white; padding:10px 20px; text-decoration:none; border-radius:8px; display:block; text-align:center; font-weight:bold;">Lanjutkan ke WhatsApp ➔</a>', unsafe_allow_html=True)
+                    st.success("Formulir terekam! Klik tombol di bawah untuk kirim ke Florist.")
+                    st.link_button("Lanjutkan ke WhatsApp ➔", link_wa) # Menggunakan tombol bawaan Streamlit yang aman
                 else:
                     st.error("Mohon lengkapi formulir terlebih dahulu.")
                     
@@ -130,42 +124,53 @@ else:
             with st.chat_message(msg["role"]):
                 st.markdown(msg["content"])
                 
-    # NLP & SQL Engine
-    def get_ai_recommendation(user_input):
+    # NLP & SQL Engine yang Diperbarui
+    def get_bloomerbro_recommendation(user_input):
         df = pd.read_sql("SELECT * FROM products", conn)
         text = user_input.lower()
         
+        # 1. Menangani sapaan dasar agar lebih natural
+        greetings = ['halo', 'hai', 'pagi', 'siang', 'sore', 'malam', 'test', 'ping']
+        if any(g in text.split() for g in greetings) and len(text.split()) <= 3:
+            return "Halo juga! Bloomerbro siap bantu nih. Ada yang bisa saya rekomendasikan untuk Anda hari ini?"
+
+        # 2. Ekstraksi Budget
         budget_match = re.search(r'\b(\d+)(?:\s*(?:ribu|rb|k))?\b', text.replace('.', ''))
         max_budget = int(budget_match.group(1)) * 1000 if budget_match and int(budget_match.group(1)) < 1000 else \
                      int(budget_match.group(1)) if budget_match else None
         
+        # 3. Filter Multi-Kriteria
         if 'wisuda' in text: df = df[df['kategori'] == 'wisuda']
-        elif 'anniversary' in text: df = df[df['kategori'] == 'anniversary']
+        elif 'anniversary' in text or 'jadian' in text: df = df[df['kategori'] == 'anniversary']
         elif 'ulang tahun' in text or 'ultah' in text: df = df[df['kategori'] == 'ulang tahun']
-        elif 'pernikahan' in text: df = df[df['kategori'] == 'pernikahan']
+        elif 'pernikahan' in text or 'nikah' in text: df = df[df['kategori'] == 'pernikahan']
         elif 'valentine' in text: df = df[df['kategori'] == 'valentine']
         
-        for w in ['pink', 'merah', 'putih', 'kuning', 'biru', 'pastel']:
-            if w in text: df = df[df['warna'].str.contains(w)]
-        for b in ['mawar', 'lily', 'tulip', 'peony', 'matahari', 'mix']:
-            if b in text: df = df[df['bunga'].str.contains(b)]
+        # Pengecekan warna yang lebih fleksibel
+        warna_ditemukan = [w for w in ['pink', 'merah', 'putih', 'kuning', 'biru', 'pastel', 'coklat'] if w in text]
+        if warna_ditemukan:
+            df = df[df['warna'].str.contains('|'.join(warna_ditemukan))]
+            
+        bunga_ditemukan = [b for b in ['mawar', 'lily', 'tulip', 'peony', 'matahari', 'mix', 'hydrangea'] if b in text]
+        if bunga_ditemukan:
+            df = df[df['bunga'].str.contains('|'.join(bunga_ditemukan))]
                 
         if max_budget: df = df[df['harga'] <= max_budget]
         
+        # 4. Respon Bloomerbro
         if df.empty:
-            # Menghilangkan kata AI pada respon gagal pencarian
-            return "Maaf, saya tidak menemukan buket tersebut. Boleh coba ubah budget atau warnanya?"
+            return "Waduh, Bloomerbro belum nemu nih racikan buket yang pas dengan kriteria tadi. 😅 Boleh coba naikkan sedikit budgetnya atau ubah warnanya? Atau sebutkan acaranya saja biar saya pilihkan!"
         else:
-            res = "**Berikut rekomendasi terbaik kami:**\n\n"
+            res = "**Tentu! Ini racikan rekomendasi terbaik dari Bloomerbro:**\n\n"
             for _, r in df.head(3).iterrows():
                 res += f"✨ **{r['nama']}** (Rp {r['harga']:,})\n"
-            res += "\n*Isi formulir pemesanan di bagian atas jika berminat.*"
+            res += "\n*Kalau ada yang di hati, langsung aja buka menu **Formulir Pemesanan Buket** di atas ya!*"
             return res
 
-    # Input User (otomatis selalu di bawah, hanya ADA SATU blok)
+    # Input User
     if prompt := st.chat_input("Ketik pesan Anda..."):
         st.session_state.chat_history.append({"role": "user", "content": prompt})
-        bot_reply = get_ai_recommendation(prompt)
+        bot_reply = get_bloomerbro_recommendation(prompt)
         st.session_state.chat_history.append({"role": "assistant", "content": bot_reply})
         
         conn.cursor().execute("INSERT INTO chat_history (user_msg, bot_reply, tanggal) VALUES (?, ?, ?)", 
