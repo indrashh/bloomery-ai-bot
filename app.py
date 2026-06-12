@@ -3,11 +3,10 @@ import pandas as pd
 import sqlite3
 import plotly.express as px
 import re
-import random 
 from datetime import datetime
 
 # 1. KONFIGURASI TAMPILAN KHUSUS WIDGET
-st.set_page_config(page_title="Bloomery AI", layout="centered", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Bloomery", layout="centered", initial_sidebar_state="collapsed")
 
 # CSS Khusus untuk menghilangkan border, header, dan merapikan padding agar pas di dalam Iframe HTML
 st.markdown("""
@@ -38,20 +37,15 @@ def init_db():
     
     c.execute("SELECT COUNT(*) FROM products")
     if c.fetchone()[0] == 0:
-        # Ke-15 Produk diselaraskan dengan Katalog HTML
         dummies = [
-            ("Red Elegance Rose", 350000, "anniversary", "merah", "mawar"),
-            ("White Lily Wedding", 500000, "pernikahan", "putih", "lily"),
-            ("Yellow Cheer Up", 120000, "ulang tahun", "kuning", "matahari"),
             ("Graduation Pink Rose", 150000, "wisuda", "pink", "mawar"),
-            ("Sweet Valentine Tulip", 250000, "valentine", "pink", "tulip"),
-            ("Blue Hydrangea Dream", 200000, "ulang tahun", "biru", "hydrangea"),
+            ("Red Elegance Anniversary", 350000, "anniversary", "merah", "mawar"),
+            ("Yellow Cheer Up", 120000, "ulang tahun", "kuning", "matahari"),
+            ("White Lily Wedding", 500000, "pernikahan", "putih", "lily"),
+            ("Valentine Pink Tulip", 250000, "valentine", "pink", "tulip"),
+            ("Graduation Blue Hydrangea", 200000, "wisuda", "biru", "hydrangea"),
             ("Rustic Wedding Mix", 450000, "pernikahan", "coklat", "mix"),
-            ("Birthday Pastel Peony", 280000, "ulang tahun", "pastel", "peony"),
-            ("White Baby Breath", 90000, "wisuda", "putih", "baby breath"),
-            ("100 Red Romance", 850000, "anniversary", "merah", "mawar"),
-            ("Bridal Pastel Peony", 600000, "pernikahan", "pastel", "peony"),
-            ("Sunflower Plus Doll", 180000, "wisuda", "kuning", "matahari")
+            ("Birthday Pastel Peony", 280000, "ulang tahun", "pastel", "peony")
         ]
         c.executemany("INSERT INTO products (nama, harga, kategori, warna, bunga) VALUES (?, ?, ?, ?, ?)", dummies)
         conn.commit()
@@ -59,8 +53,9 @@ def init_db():
 
 conn = init_db()
 
+# Menghapus kata AI pada sapaan awal
 if 'chat_history' not in st.session_state:
-    st.session_state.chat_history = [{"role": "assistant", "content": "Halo! Saya AI Florist Bloomery. Acara apa yang sedang Anda siapkan? (Cth: Buket wisuda warna pink)"}]
+    st.session_state.chat_history = [{"role": "assistant", "content": "Halo! Saya Asisten Florist Bloomery. Acara apa yang sedang Anda siapkan? (Cth: Buket wisuda warna pink)"}]
 
 # 3. ROUTING VIEW (Memisahkan Tampilan HTML Iframe vs Tampilan Admin)
 # Mengambil parameter dari URL (contoh: ?view=admin)
@@ -76,7 +71,7 @@ if view_mode == "admin":
     
     col1, col2 = st.columns(2)
     col1.metric("Leads Pesanan Masuk", len(df_leads))
-    col2.metric("Total Interaksi Chat AI", len(df_chats))
+    col2.metric("Total Interaksi Chat", len(df_chats))
     
     st.markdown("---")
     if not df_leads.empty:
@@ -124,73 +119,8 @@ else:
             with st.chat_message(msg["role"]):
                 st.markdown(msg["content"])
                 
-    # NLP & SQL Engine (Versi Interaktif & Marketing)
+    # NLP & SQL Engine
     def get_ai_recommendation(user_input):
-        df = pd.read_sql("SELECT * FROM products", conn)
-        text = user_input.lower()
-        
-        # 1. DETEKSI SAPAAN KHUSUS (Greeting)
-        sapaan = ['halo', 'hai', 'pagi', 'siang', 'sore', 'malam', 'hello', 'ping', 'bot']
-        # Jika pesan pendek dan mengandung kata sapaan
-        if any(word in text for word in sapaan) and len(text.split()) < 4:
-            balasan_sapaan = [
-                "Haii! 👋 Saya AI Florist dari Bloomery. Ada momen spesial apa yang ingin dirayakan hari ini?",
-                "Halo kak! ✨ Selamat datang di Bloomery. Sedang mencari buket untuk acara apa nih?",
-                "Hai, senang bertemu kakak! 🌸 Saya siap bantu carikan buket bunga paling cantik. Ada warna favorit?"
-            ]
-            return random.choice(balasan_sapaan)
-
-        # 2. EKSTRAK KRITERIA PENCARIAN
-        budget_match = re.search(r'\b(\d+)(?:\s*(?:ribu|rb|k))?\b', text.replace('.', ''))
-        max_budget = int(budget_match.group(1)) * 1000 if budget_match and int(budget_match.group(1)) < 1000 else \
-                     int(budget_match.group(1)) if budget_match else None
-        
-        if 'wisuda' in text or 'lulus' in text: df = df[df['kategori'] == 'wisuda']
-        elif 'anniversary' in text or 'jadian' in text: df = df[df['kategori'] == 'anniversary']
-        elif 'ulang tahun' in text or 'ultah' in text: df = df[df['kategori'] == 'ulang tahun']
-        elif 'pernikahan' in text or 'wedding' in text: df = df[df['kategori'] == 'pernikahan']
-        elif 'valentine' in text or 'kasih sayang' in text: df = df[df['kategori'] == 'valentine']
-        
-        kriteria_ditemukan = False
-        for w in ['pink', 'merah', 'putih', 'kuning', 'biru', 'pastel', 'ungu', 'coklat']:
-            if w in text: 
-                df = df[df['warna'].str.contains(w)]
-                kriteria_ditemukan = True
-                
-        for b in ['mawar', 'lily', 'tulip', 'peony', 'matahari', 'mix', 'anggrek', 'baby breath', 'carnation']:
-            if b in text: 
-                df = df[df['bunga'].str.contains(b)]
-                kriteria_ditemukan = True
-                
-        if max_budget: 
-            df = df[df['harga'] <= max_budget]
-            kriteria_ditemukan = True
-
-        # 3. JIKA USER NGOBROL DI LUAR KONTEKS BUNGA
-        if not kriteria_ditemukan and not any(x in text for x in ['wisuda', 'anniversary', 'ulang tahun', 'pernikahan', 'valentine', 'buket', 'bunga', 'pesan', 'beli']):
-            return "Wah, saya ini khusus merangkai bunga kak 🤭. Coba ceritain ke saya, butuh buket untuk budget berapa atau warna apa? (Cth: *Ada mawar merah dibawah 400rb?*)"
-
-        # 4. JIKA PRODUK TIDAK DITEMUKAN (Trik Upselling)
-        if df.empty:
-            return "Hmm... stok untuk kriteria persis seperti itu sedang habis kak 🥺. Tapi tenang! Coba naikkan sedikit budgetnya atau ganti warna bunganya, pasti ada yang cocok!"
-        
-        # 5. COPYWRITING MARKETING (Gaya bahasa jualan yang persuasif)
-        intro_marketing = [
-            "Wah, pilihan yang sangat estetik! ✨ Ini dia koleksi premium *best-seller* kami untuk kakak:\n\n",
-            "Pilihan cerdas! 😍 Kami punya mahakarya artisan florist yang sangat pas dengan selera kakak:\n\n",
-            "Tentu saja! Spesial untuk momen berharga ini, saya sangat merekomendasikan:\n\n"
-        ]
-        
-        res = random.choice(intro_marketing)
-        
-        for _, r in df.head(3).iterrows():
-            res += f"💐 **{r['nama']}**\n"
-            res += f"💎 Investasi: **Rp {r['harga']:,}**\n"
-            res += f"✨ *(Cocok banget untuk momen {r['kategori'].capitalize()})*\n\n"
-            
-        res += "---\n*Gimana kak, ada yang bikin jatuh hati? 💕 Langsung isi formulir pemesanan di atas ya, mumpung slot florist kami masih tersedia hari ini!*"
-        
-        return res
         df = pd.read_sql("SELECT * FROM products", conn)
         text = user_input.lower()
         
@@ -212,7 +142,8 @@ else:
         if max_budget: df = df[df['harga'] <= max_budget]
         
         if df.empty:
-            return "Maaf, AI tidak menemukan buket tersebut. Boleh coba ubah budget atau warnanya?"
+            # Menghilangkan kata AI pada respon gagal pencarian
+            return "Maaf, saya tidak menemukan buket tersebut. Boleh coba ubah budget atau warnanya?"
         else:
             res = "**Berikut rekomendasi terbaik kami:**\n\n"
             for _, r in df.head(3).iterrows():
@@ -220,26 +151,13 @@ else:
             res += "\n*Isi formulir pemesanan di bagian atas jika berminat.*"
             return res
 
-   # Input User (otomatis selalu di bawah)
+    # Input User (otomatis selalu di bawah, hanya ADA SATU blok)
     if prompt := st.chat_input("Ketik pesan Anda..."):
-        # 1. Simpan pesan user ke memori
         st.session_state.chat_history.append({"role": "user", "content": prompt})
-        
-        # 2. TAMPILKAN LANGSUNG pesan user ke layar (di dalam chat_container)
-        with chat_container:
-            with st.chat_message("user"):
-                st.markdown(prompt)
-                
-        # 3. AI memproses balasan
         bot_reply = get_ai_recommendation(prompt)
         st.session_state.chat_history.append({"role": "assistant", "content": bot_reply})
         
-        # 4. TAMPILKAN LANGSUNG balasan AI ke layar
-        with chat_container:
-            with st.chat_message("assistant"):
-                st.markdown(bot_reply)
-        
-        # 5. Simpan ke Database
         conn.cursor().execute("INSERT INTO chat_history (user_msg, bot_reply, tanggal) VALUES (?, ?, ?)", 
                               (prompt, bot_reply, datetime.now().strftime("%Y-%m-%d %H:%M")))
         conn.commit()
+        st.rerun()
