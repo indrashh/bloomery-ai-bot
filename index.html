@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bloomery AI - Premium Florist & AI Assistant</title>
+    <title>Bloomery - Premium Florist & Assistant</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
@@ -241,48 +241,11 @@
         line-height: 1.6;
       }
 
-      /* ================= CATALOG & SEARCH SECTION ================= */
+      /* ================= CATALOG SECTION ================= */
       .catalog {
         padding: 100px 8%;
         background-color: var(--bg-gray);
       }
-
-      /* Search Bar Style */
-      .search-container {
-        text-align: center;
-        margin-bottom: 50px;
-      }
-      #searchInput {
-        width: 100%;
-        max-width: 600px;
-        padding: 18px 30px;
-        border-radius: 50px;
-        border: 2px solid #edf2f7;
-        font-size: 16px;
-        font-family: "Poppins", sans-serif;
-        outline: none;
-        transition: 0.3s;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
-        background: var(--white)
-          url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%23718096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>')
-          no-repeat 95% center;
-      }
-      #searchInput:focus {
-        border-color: var(--rose-gold);
-        box-shadow: 0 8px 25px rgba(183, 110, 121, 0.15);
-      }
-      .no-result {
-        display: none;
-        text-align: center;
-        padding: 40px;
-        font-size: 18px;
-        color: var(--text-light);
-        background: var(--white);
-        border-radius: 20px;
-        border: 1px dashed var(--rose-gold);
-        grid-column: 1 / -1;
-      }
-
       .catalog-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -320,7 +283,6 @@
         object-fit: cover;
         border-radius: 12px;
         margin-bottom: 20px;
-        background-color: #eee;
       }
       .product-info h4 {
         font-size: 20px;
@@ -388,6 +350,8 @@
         flex-direction: column;
         align-items: flex-end;
       }
+
+      /* Tooltip */
       .chat-tooltip {
         background: var(--white);
         color: var(--text-dark);
@@ -411,6 +375,8 @@
           transform: translateY(-5px);
         }
       }
+
+      /* Floating Button */
       .chat-btn {
         width: 70px;
         height: 70px;
@@ -453,6 +419,8 @@
         transform: scale(1.1);
         background-color: var(--rose-gold-dark);
       }
+
+      /* Iframe Box */
       .chat-widget-box {
         display: none;
         width: 400px;
@@ -476,7 +444,14 @@
           opacity: 1;
         }
       }
+      .chat-widget-box iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        background-color: #fafafa;
+      }
 
+      /* Responsiveness */
       @media (max-width: 991px) {
         .hero {
           flex-direction: column;
@@ -485,6 +460,12 @@
         }
         .hero-content {
           margin-bottom: 50px;
+        }
+        .hero-buttons {
+          justify-content: center;
+        }
+        .hero-image {
+          justify-content: center;
         }
         .chat-widget-box {
           width: 90vw;
@@ -495,7 +476,7 @@
         }
         .nav-links {
           display: none;
-        }
+        } /* Simplified for mobile */
       }
     </style>
   </head>
@@ -508,7 +489,7 @@
         <li><a href="#katalog">Katalog</a></li>
         <li>
           <a href="#" onclick="toggleChat()" class="btn-nav"
-            >Tanya AI Assistant</a
+            >Tanya Asisten Florist</a
           >
         </li>
       </ul>
@@ -518,11 +499,11 @@
       <div class="hero-content">
         <div class="badge">✨ Inovasi Florist #1 di Indonesia</div>
         <h1>
-          Rangkai Momen Spesial Anda dengan <span>Kecerdasan Buatan</span>
+          Rangkai Momen Spesial Anda dengan <span>Buket Pilihan</span>
         </h1>
         <p>
           Tidak perlu bingung memilih bunga. Konsultasikan acara, anggaran, dan
-          warna favorit Anda. Personal AI Florist kami akan memberikan
+          warna favorit Anda. Asisten Florist kami akan memberikan
           rekomendasi buket paling sempurna dalam hitungan detik.
         </p>
         <div class="hero-buttons">
@@ -543,16 +524,16 @@
     <section class="features" id="fitur">
       <h2 class="section-title">Mengapa Memilih Bloomery?</h2>
       <p class="section-subtitle">
-        Kami menggabungkan seni merangkai bunga tradisional dengan teknologi AI
-        modern untuk memberikan pengalaman belanja yang mulus.
+        Kami menggabungkan seni merangkai bunga tradisional dengan layanan
+        konsultasi personal untuk memberikan pengalaman belanja yang mulus.
       </p>
 
       <div class="feature-grid">
         <div class="feature-card">
-          <div class="feature-icon">🤖</div>
-          <h3>Personal AI Assistant</h3>
+          <div class="feature-icon">💬</div>
+          <h3>Asisten Florist Pribadi</h3>
           <p>
-            Chatbot kami siap 24/7 membantu Anda menemukan kombinasi bunga
+            Layanan asisten kami siap 24/7 membantu Anda menemukan kombinasi bunga
             terbaik sesuai dengan budget dan jenis acara Anda.
           </p>
         </div>
@@ -576,7 +557,7 @@
     </section>
 
     <section class="catalog" id="katalog">
-      <div style="text-align: center; margin-bottom: 40px">
+      <div style="text-align: center; margin-bottom: 60px">
         <h2 class="section-title">Koleksi Terpopuler</h2>
         <p class="section-subtitle">
           Beberapa mahakarya rangkaian bunga yang paling dicintai oleh pelanggan
@@ -584,23 +565,7 @@
         </p>
       </div>
 
-      <div class="search-container">
-        <input
-          type="text"
-          id="searchInput"
-          onkeyup="searchCatalog()"
-          placeholder="Ketik nama bunga atau acara (cth: wisuda, mawar)..."
-        />
-      </div>
-
-      <div class="catalog-grid" id="catalogGrid">
-        <div class="no-result" id="noResultMsg">
-          Maaf, buket yang Anda cari belum tersedia 🥺. <br />
-          <span style="font-size: 14px; margin-top: 10px; display: block"
-            >Klik tombol chat di kanan bawah untuk tanya AI!</span
-          >
-        </div>
-
+      <div class="catalog-grid">
         <div class="product-card">
           <div class="product-badge">Terlaris</div>
           <img
@@ -619,7 +584,11 @@
         </div>
 
         <div class="product-card">
-          <img src="assets/white-lily.jpg" alt="Lily" class="product-img" />
+          <img
+            src="https://images.unsplash.com/photo-1601379465497-6eb9f30cd238?w=500&q=80"
+            alt="Lily"
+            class="product-img"
+          />
           <div class="product-info">
             <span class="cat">Pernikahan</span>
             <h4>White Lily Wedding</h4>
@@ -645,155 +614,21 @@
             <div class="rating">⭐ 4.7</div>
           </div>
         </div>
-
-        <div class="product-card">
-          <img
-            src="https://images.unsplash.com/photo-1563241527-3004b7be0ffd?w=500&q=80"
-            alt="Pink Rose"
-            class="product-img"
-          />
-          <div class="product-info">
-            <span class="cat">Wisuda</span>
-            <h4>Graduation Pink Rose</h4>
-          </div>
-          <div class="product-footer">
-            <div class="price">Rp 150.000</div>
-            <div class="rating">⭐ 4.8</div>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <div class="product-badge">Promo</div>
-          <img src="assets/pink.jpg" alt="Tulip" class="product-img" />
-          <div class="product-info">
-            <span class="cat">Valentine</span>
-            <h4>Sweet Valentine Tulip</h4>
-          </div>
-          <div class="product-footer">
-            <div class="price">Rp 250.000</div>
-            <div class="rating">⭐ 4.9</div>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <img src="assets/blue.jpg" alt="Hydrangea" class="product-img" />
-          <div class="product-info">
-            <span class="cat">Ulang Tahun</span>
-            <h4>Blue Hydrangea Dream</h4>
-          </div>
-          <div class="product-footer">
-            <div class="price">Rp 200.000</div>
-            <div class="rating">⭐ 4.6</div>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <img
-            src="https://images.unsplash.com/photo-1463936575829-25148e1db1b8?w=500&q=80"
-            alt="Rustic"
-            class="product-img"
-          />
-          <div class="product-info">
-            <span class="cat">Pernikahan</span>
-            <h4>Rustic Wedding Mix</h4>
-          </div>
-          <div class="product-footer">
-            <div class="price">Rp 450.000</div>
-            <div class="rating">⭐ 4.8</div>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <img
-            src="https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?w=500&q=80"
-            alt="Peony"
-            class="product-img"
-          />
-          <div class="product-info">
-            <span class="cat">Ulang Tahun</span>
-            <h4>Birthday Pastel Peony</h4>
-          </div>
-          <div class="product-footer">
-            <div class="price">Rp 280.000</div>
-            <div class="rating">⭐ 4.7</div>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <img
-            src="https://images.unsplash.com/photo-1508784411316-02b8cd4d3a3a?w=500&q=80"
-            alt="Baby Breath"
-            class="product-img"
-          />
-          <div class="product-info">
-            <span class="cat">Wisuda</span>
-            <h4>White Baby Breath</h4>
-          </div>
-          <div class="product-footer">
-            <div class="price">Rp 90.000</div>
-            <div class="rating">⭐ 4.5</div>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <div class="product-badge">Premium</div>
-          <img
-            src="https://images.unsplash.com/photo-1562690868-60bbe7293e94?w=500&q=80"
-            alt="100 Roses"
-            class="product-img"
-          />
-          <div class="product-info">
-            <span class="cat">Anniversary</span>
-            <h4>100 Red Romance</h4>
-          </div>
-          <div class="product-footer">
-            <div class="price">Rp 850.000</div>
-            <div class="rating">⭐ 5.0</div>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <img
-            src="https://images.unsplash.com/photo-1519378058457-4c29a0a2efac?w=500&q=80"
-            alt="Bridal Peony"
-            class="product-img"
-          />
-          <div class="product-info">
-            <span class="cat">Pernikahan</span>
-            <h4>Bridal Pastel Peony</h4>
-          </div>
-          <div class="product-footer">
-            <div class="price">Rp 600.000</div>
-            <div class="rating">⭐ 4.9</div>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <img src="assets/sun.jpg" alt="Sunflower Doll" class="product-img" />
-          <div class="product-info">
-            <span class="cat">Wisuda</span>
-            <h4>Sunflower Plus Doll</h4>
-          </div>
-          <div class="product-footer">
-            <div class="price">Rp 180.000</div>
-            <div class="rating">⭐ 4.7</div>
-          </div>
-        </div>
       </div>
 
       <div style="text-align: center; margin-top: 50px">
         <button class="btn-secondary" onclick="toggleChat()">
-          Rekomendasi via AI ➔
+          Cari Lebih Banyak via Asisten ➔
         </button>
       </div>
     </section>
 
     <footer>
       <div class="footer-content">
-        <h2>🌸 Bloomery AI</h2>
+        <h2>🌸 Bloomery</h2>
         <p>
           Memberikan kemudahan mengekspresikan perasaan melalui keindahan bunga
-          dan teknologi AI.
+          yang dirangkai dengan penuh cinta.
         </p>
       </div>
       <div class="copyright">
@@ -803,12 +638,12 @@
 
     <div class="chat-container">
       <div class="chat-tooltip" id="chat-tooltip">
-        Bingung pilih bunga? Tanya AI! 👋
+        Bingung pilih bunga? Tanya Asisten Kami! 👋
       </div>
 
       <div class="chat-widget-box" id="chat-widget">
         <iframe
-          src="https://bloomery-ai-bot.streamlit.app/?embed=true"
+          src="http://localhost:8501/?embed=true"
           frameborder="0"
           scrolling="no"
           style="
@@ -824,7 +659,7 @@
     </div>
 
     <script>
-      // Logika Navbar
+      // Mengubah warna Navbar saat di-scroll
       window.addEventListener("scroll", function () {
         const navbar = document.getElementById("navbar");
         if (window.scrollY > 50) {
@@ -833,36 +668,6 @@
           navbar.classList.remove("scrolled");
         }
       });
-
-      // Logika Fitur Pencarian (Search Bar)
-      function searchCatalog() {
-        // Ambil teks dari input user
-        let input = document.getElementById("searchInput").value.toLowerCase();
-        let cards = document.getElementsByClassName("product-card");
-        let noResult = document.getElementById("noResultMsg");
-        let hasResult = false;
-
-        // Looping ke semua produk
-        for (let i = 0; i < cards.length; i++) {
-          let title = cards[i].querySelector("h4").innerText.toLowerCase();
-          let category = cards[i].querySelector(".cat").innerText.toLowerCase();
-
-          // Cek apakah judul ATAU kategori cocok dengan pencarian
-          if (title.includes(input) || category.includes(input)) {
-            cards[i].style.display = ""; // Tampilkan jika cocok
-            hasResult = true;
-          } else {
-            cards[i].style.display = "none"; // Sembunyikan jika tidak
-          }
-        }
-
-        // Tampilkan peringatan jika tidak ada yang cocok
-        if (!hasResult) {
-          noResult.style.display = "block";
-        } else {
-          noResult.style.display = "none";
-        }
-      }
 
       // Logika Buka/Tutup Chatbot
       function toggleChat() {
@@ -873,8 +678,8 @@
         if (widget.style.display === "none" || widget.style.display === "") {
           widget.style.display = "block";
           btn.innerHTML = "✖";
-          btn.style.transform = "rotate(90deg)";
-          tooltip.style.opacity = "0";
+          btn.style.transform = "rotate(90deg)"; // Sedikit animasi putar
+          tooltip.style.opacity = "0"; // Sembunyikan tooltip saat chat terbuka
           setTimeout(() => (tooltip.style.display = "none"), 300);
         } else {
           widget.style.display = "none";
@@ -883,6 +688,7 @@
         }
       }
 
+      // Menyembunyikan tooltip otomatis setelah 10 detik
       setTimeout(function () {
         var tooltip = document.getElementById("chat-tooltip");
         if (tooltip) {
